@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALIMO</title>
+    <!-- استدعاء Tailwind CSS للتصميم -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- خط جميل لتحسين المظهر -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
+
+    <div class="container mx-auto p-8 max-w-2xl text-center">
+        
+        <!-- ====================================================================== -->
+        <!--                                  الشرح                                  -->
+        <!-- ====================================================================== -->
+        <!--
+            أهلاً بك! تم تحديث الصفحة لعرض أزرار بدلاً من البطاقات.
+            لتعديل الروابط، اتبع التعليمات التالية:
+
+            1.  لكل مشروع تريد عرضه، ستجد وسماً <a>.
+            2.  استبدل علامة الـ (#) في السمة `href="#"` بالرابط الكامل لصفحة مشروعك.
+
+            مثال:
+            إذا كان لديك مشروع في مستودع آخر اسمه "my-cool-project"، 
+            فإن الرابط الخاص به سيكون على الأغلب:
+            https://your-username.github.io/my-cool-project/
+
+            لذا، ستقوم بتغيير `href="#"` إلى `href="https://your-username.github.io/my-cool-project/"`
+
+            3.  غيّر "اسم المشروع" ليتناسب مع مشروعك.
+            4.  لإضافة المزيد من الأزرار، ما عليك سوى نسخ ولصق وسم <a> كاملاً.
+        -->
+        
+        <header class="mb-12">
+            <h1 class="text-5xl font-bold text-cyan-400">ALIMO</h1>
+            <p class="mt-4 text-lg text-gray-300">مجموعة من المشاريع والتجارب البرمجية الخاصة بي.</p>
+        </header>
+
+        <main class="flex flex-col items-center gap-4 w-full max-w-sm mx-auto">
+
+            <!-- ====================================================================== -->
+            <!--                                الزر الأول                               -->
+            <!-- ====================================================================== -->
+            <a href="#" <!-- <== ضع رابط مشروعك الأول هنا مكان الـ # -->
+               class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 text-center text-lg">
+                اسم المشروع الأول
+            </a>
+
+            <!-- ====================================================================== -->
+            <!--                                الزر الثاني                              -->
+            <!-- ====================================================================== -->
+            <a href="#" <!-- <== ضع رابط مشروعك الثاني هنا مكان الـ # -->
+               class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 text-center text-lg">
+                اسم المشروع الثاني
+            </a>
+            
+            <!-- ====================================================================== -->
+            <!--                                الزر الثالث                              -->
+            <!-- ====================================================================== -->
+            <a href="#" <!-- <== ضع رابط مشروعك الثالث هنا مكان الـ # -->
+               class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 text-center text-lg">
+                اسم المشروع الثالث
+            </a>
+            
+            <!-- ====================================================================== -->
+            <!--                       زر لمشروع جديد (يمكنك تكراره)                      -->
+            <!-- ====================================================================== -->
+            <a href="#" <!-- <== ضع رابط مشروعك الرابع هنا مكان الـ # -->
+               class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 text-center text-lg">
+                اسم المشروع الرابع
+            </a>
+
+        </main>
+
+        <footer class="mt-12 text-gray-500">
+            <p>تم التصميم والتطوير بواسطة ALIMO</p>
+        </footer>
+
+    </div>
+</body>
+</html>
+

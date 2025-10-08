@@ -21,6 +21,9 @@
             --neon-orange: #FF8C00; /* Dark Orange */
             --glow-intensity: 0 0 8px;
         }
+        html, body {
+            overscroll-behavior-x: none;
+        }
         body {
             font-family: 'Tajawal', sans-serif;
             background-color: var(--bg-dark);
@@ -122,6 +125,7 @@
             position: relative;
             margin-bottom: 20px; /* Space between matches */
             z-index: 5;
+            flex-shrink: 0; /* Prevent matches from shrinking */
         }
         .match::before { /* Top border glow */
             content: '';
@@ -213,12 +217,13 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center">
-                        <i class="fas fa-trophy text-2xl text-neon-orange mr-4"></i>
+                        <i class="fas fa-trophy text-2xl text-neon-orange mr-3 sm:mr-4"></i>
                         <div>
-                             <h1 class="text-lg font-bold text-white leading-tight">بطولة مجمع الثقافة للألعاب الإلكترونية</h1>
-                             <p class="text-sm text-text-secondary leading-tight">مركز قيادة البطولة</p>
+                             <h1 class="text-base sm:text-lg font-bold text-white leading-tight">بطولة مجمع الثقافة للألعاب الإلكترونية</h1>
+                             <p class="text-xs sm:text-sm text-text-secondary leading-tight">مركز قيادة البطولة</p>
                         </div>
                     </div>
+                    <!-- Desktop Menu -->
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
                             <a href="#" id="nav-dashboard" class="nav-link active px-3 py-2 text-sm font-medium" onclick="switchView('dashboard')">لوحة القيادة</a>
@@ -226,12 +231,28 @@
                             <a href="#" id="nav-rocket" class="nav-link px-3 py-2 text-sm font-medium" onclick="switchView('rocket')">Rocket League</a>
                         </div>
                     </div>
+                    <!-- Mobile menu button -->
+                    <div class="-mr-2 flex md:hidden">
+                        <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Open main menu</span>
+                            <i id="menu-open-icon" class="fas fa-bars h-6 w-6 block"></i>
+                            <i id="menu-close-icon" class="fas fa-times h-6 w-6 hidden"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Mobile menu, show/hide based on menu state. -->
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#" id="nav-mobile-dashboard" class="nav-link active text-white block px-3 py-2 rounded-md text-base font-medium" onclick="switchView('dashboard')">لوحة القيادة</a>
+                    <a href="#" id="nav-mobile-fifa" class="nav-link text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium" onclick="switchView('fifa')">FIFA</a>
+                    <a href="#" id="nav-mobile-rocket" class="nav-link text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium" onclick="switchView('rocket')">Rocket League</a>
                 </div>
             </div>
         </nav>
 
         <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto p-6 md:p-10 relative">
+        <main class="flex-1 overflow-y-auto p-4 md:p-10 relative">
             <!-- Dashboard View -->
             <div id="view-dashboard" class="relative z-10">
                 <header class="mb-8">
@@ -272,7 +293,7 @@
 
     <script>
         const rawData = [
-            { name: "عبد الملك اسماعيل عيسى صبيخي", id: "1154464224", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "راكان عبدالله علي عسيري", id: "1165909050", grade: "أول متوسط", game: "روكيت ليج" }, { name: "جابر محمد جابر عسيري", id: "1152842892", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "ريان إبراهيم علي عسيري", id: "7", grade: "أول متوسط", game: "كرة القدم (فيفا)" }, { name: "عزام محمد احمد النجعي", id: "1158897197", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "ماطر احمد ماطر عسيري", id: "1164702126", grade: "أول متوسط", game: "كرة القدم (فيفا)" }, { name: "أحمد سلطان محمد ال محنش", id: "1166413862", grade: "أول متوسط", game: "روكيت ليج" }, { name: "عبدالرحمن احمد صهيف عسيري", id: "1158913218", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "نايف علي سعيد الفاحم", id: "1159924388", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "حازم موسى محمد عسيري", id: "1177411590", grade: "رابع", game: "كرة القدم (فيفا)" }, { name: "حازم موسى محمد عسيري", id: "1177411590", grade: "رابع", game: "روكيت ليج" }, { name: "تميم علي احمد محمد فايع حسن", id: "1166187573", grade: "أول متوسط", game: "كرة القدم (فيفا)" }, { name: "سعيد أحمد سعيد الحيدي", id: "1165932227", grade: "أول متوسط", game: "روكيت ليج" }, { name: "سعود أحمد سعيد الحيدي", id: "1171149543", grade: "سادس", game: "روكيت ليج" }, { name: "اياد محمد عبدالله راتي", id: "1162138851", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "عبدالعزيز حاطر علي عسيري", id: "1159233251", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "ايمن حاضر علي عسيري", id: "1153410897", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "مهدي جمال فائع عسيري", id: "1154995177", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "يحيى محمد مفرح", id: "1151960224", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "راشد احمد مفرح", id: "rashid-ahmed", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "عبدالله محمد", id: "1158207769", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "مشافي مشني مشافي العرافي", id: "1157708452", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" },
+            { name: "عبد الملك اسماعيل عيسى صبيخي", id: "1154464224", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "راكان عبدالله علي عسيري", id: "1165909050", grade: "أول متوسط", game: "روكيت ليج" }, { name: "جابر محمد جابر عسيري", id: "1152842892", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "ريان إبراهيم علي عسيري", id: "7", grade: "أول متوسط", game: "كرة القدم (فيفa)" }, { name: "عزام محمد احمد النجعي", id: "1158897197", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "ماطر احمد ماطر عسيري", id: "1164702126", grade: "أول متوسط", game: "كرة القدم (فيفا)" }, { name: "أحمد سلطان محمد ال محنش", id: "1166413862", grade: "أول متوسط", game: "روكيت ليج" }, { name: "عبدالرحمن احمد صهيف عسيري", id: "1158913218", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "نايف علي سعيد الفاحم", id: "1159924388", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "حازم موسى محمد عسيري", id: "1177411590", grade: "رابع", game: "كرة القدم (فيفا)" }, { name: "حازم موسى محمد عسيري", id: "1177411590", grade: "رابع", game: "روكيت ليج" }, { name: "تميم علي احمد محمد فايع حسن", id: "1166187573", grade: "أول متوسط", game: "كرة القدم (فيفا)" }, { name: "سعيد أحمد سعيد الحيدي", id: "1165932227", grade: "أول متوسط", game: "روكيت ليج" }, { name: "سعود أحمد سعيد الحيدي", id: "1171149543", grade: "سادس", game: "روكيت ليج" }, { name: "اياد محمد عبدالله راتي", id: "1162138851", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "عبدالعزيز حاطر علي عسيري", id: "1159233251", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "ايمن حاضر علي عسيري", id: "1153410897", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "مهدي جمال فائع عسيري", id: "1154995177", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "يحيى محمد مفرح", id: "1151960224", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "راشد احمد مفرح", id: "rashid-ahmed", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "عبدالله محمد", id: "1158207769", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "مشافي مشني مشافي العرافي", id: "1157708452", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" },
         ];
         
         const uniquePlayers = Array.from(new Set(rawData.map(p => JSON.stringify(p)))).map(s => JSON.parse(s));
@@ -282,20 +303,45 @@
             rocket: { players: uniquePlayers.filter(p => p.game.includes('روكيت')), matches: [] }
         };
 
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const openIcon = document.getElementById('menu-open-icon');
+        const closeIcon = document.getElementById('menu-close-icon');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            openIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+
         function switchView(viewName) {
             document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
             document.getElementById(`view-${viewName}`).classList.remove('hidden');
-            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-            document.getElementById(`nav-${viewName}`).classList.add('active');
+            
+            // Update desktop nav links
+            document.querySelectorAll('.top-nav .nav-link').forEach(n => n.classList.remove('active'));
+            const desktopLink = document.getElementById(`nav-${viewName}`);
+            if(desktopLink) desktopLink.classList.add('active');
+
+            // Update mobile nav links
+             document.querySelectorAll('#mobile-menu .nav-link').forEach(n => n.classList.remove('active'));
+            const mobileLink = document.getElementById(`nav-mobile-${viewName}`);
+            if(mobileLink) mobileLink.classList.add('active');
+
+            // Close mobile menu on selection
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                openIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
         }
 
         function createPlayerHTML(player, matchId, slot) {
             const playerName = player ? player.name : '<i class="tbd">بانتظار المتأهل</i>';
             const isBye = player && player.name === 'BYE';
             const isDisabled = !player || isBye;
-            // FIX: Added 'player' class to the wrapper div so ".player button" styles apply correctly.
             return `<div id="${matchId}-p${slot}" class="match-player player ${isBye ? 'bg-gray-800 opacity-50' : ''}">
-                        <span class="player-name">${playerName}</span>
+                        <span class="player-name text-sm">${playerName}</span>
                         <button onclick="declareWinner('${matchId}', ${slot})" ${isDisabled ? 'disabled' : ''}><i class="fas fa-crown text-base"></i></button>
                     </div>`;
         }
@@ -341,7 +387,6 @@
                 roundNum++;
             }
             
-            // NEW: Defer line drawing until after the DOM has been painted.
             setTimeout(() => drawBracketLines(gameKey), 0);
             
             bracketData.matches.forEach(match => {
@@ -363,7 +408,6 @@
 
             const winnerSource = winnerSlot === 1 ? currentMatch.p1Source : currentMatch.p2Source;
             
-            // **FIX**: The winner is either the player from the source object, or the winner of the source match.
             currentMatch.winner = winnerSource.player || (winnerSource.match ? winnerSource.match.winner : null);
             
             if (!currentMatch.winner) {
@@ -385,7 +429,6 @@
             if (nextMatch) {
                 const nextSlot = (nextMatch.p1Source.match && nextMatch.p1Source.match.matchId === matchId) ? 1 : 2;
                 
-                // Propagate the winner player object to the next match's source.
                 nextMatch[nextSlot === 1 ? 'p1Source' : 'p2Source'].player = currentMatch.winner;
 
                 const nextPlayerDiv = document.getElementById(`${nextMatch.matchId}-p${nextSlot}`);
@@ -394,7 +437,6 @@
                     nextPlayerDiv.querySelector('.player-name').classList.remove('tbd');
                 }
                 
-                // Enable buttons on the next match if its other opponent is also ready.
                 const otherSource = nextSlot === 1 ? nextMatch.p2Source : nextMatch.p1Source;
                 if (otherSource.player || (otherSource.match && otherSource.match.winner)) {
                      document.getElementById(nextMatch.matchId).querySelectorAll('button').forEach(b => b.disabled = false);
@@ -414,7 +456,6 @@
             }
         }
         
-        // NEW: Function to draw the connector lines for the brackets.
         function drawBracketLines(gameKey) {
             const container = document.getElementById(`${gameKey}-bracket-container`);
             if (!container) return;
@@ -435,30 +476,26 @@
 
                     if (!topMatch || !bottomMatch || !nextMatch) continue;
                     
-                    const lineHalfWidth = 40; // Half of the margin-right on .round
+                    const lineHalfWidth = 40; 
                     const midX = topMatch.offsetLeft + topMatch.offsetWidth;
                     
-                    // Top Match Connector
                     const startY = topMatch.offsetTop + topMatch.offsetHeight / 2;
                     const hLine1 = document.createElement('div');
                     hLine1.className = 'match-line h-line';
                     hLine1.style.cssText = `top: ${startY - 1}px; left: ${midX}px; width: ${lineHalfWidth}px;`;
                     container.appendChild(hLine1);
 
-                    // Bottom Match Connector
                     const endY = bottomMatch.offsetTop + bottomMatch.offsetHeight / 2;
                     const hLine2 = document.createElement('div');
                     hLine2.className = 'match-line h-line';
                     hLine2.style.cssText = `top: ${endY - 1}px; left: ${midX}px; width: ${lineHalfWidth}px;`;
                     container.appendChild(hLine2);
                     
-                    // Vertical Connector
                     const vLine = document.createElement('div');
                     vLine.className = 'match-line v-line';
                     vLine.style.cssText = `top: ${startY}px; left: ${midX + lineHalfWidth - 1}px; height: ${endY - startY}px;`;
                     container.appendChild(vLine);
 
-                    // Connector to next match
                     const nextMatchY = nextMatch.offsetTop + nextMatch.offsetHeight / 2;
                     const hLine3 = document.createElement('div');
                     hLine3.className = 'match-line h-line';
@@ -491,7 +528,6 @@
             updateStats();
         };
 
-        // NEW: Redraw lines on window resize to maintain connections.
         window.addEventListener('resize', () => {
             drawBracketLines('fifa');
             drawBracketLines('rocket');

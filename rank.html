@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بطولة مجمع الثقافة للألعاب الإلكترونية - مركز القيادة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0A0A0E;
+            --bg-medium: #1A1A22;
+            --bg-light: #2A2A35;
+            --text-primary: #E0E0E0;
+            --text-secondary: #A0A0A0;
+            --neon-blue: #00FFFF; /* Cyan */
+            --neon-green: #00FF00; /* Lime Green */
+            --neon-orange: #FF8C00; /* Dark Orange */
+            --glow-intensity: 0 0 8px;
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }
+        body::before { /* Cybernetic grid background */
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at top left, rgba(0,255,255,0.08) 0%, transparent 20%),
+                radial-gradient(circle at bottom right, rgba(255,140,0,0.08) 0%, transparent 20%),
+                url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="%231a1a22" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>') center / 40px 40px;
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        h1, h2, h3, .stat-value, .player-name {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+        .top-nav {
+            background-color: var(--bg-medium);
+            border-bottom: 2px solid var(--neon-blue);
+            box-shadow: var(--glow-intensity) rgba(0,255,255,0.3);
+            z-index: 20;
+            position: relative;
+        }
+        .nav-link {
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease-in-out;
+            text-shadow: none;
+        }
+        .nav-link.active, .nav-link:hover {
+            border-bottom-color: var(--neon-blue);
+            color: var(--neon-blue);
+            text-shadow: var(--glow-intensity) var(--neon-blue);
+        }
+        .stat-card {
+            background-color: var(--bg-medium);
+            border: 1px solid var(--neon-blue);
+            box-shadow: var(--glow-intensity) rgba(0,255,255,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before { /* Glitch effect */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0,255,255,0.1) 0%, transparent 50%, rgba(255,140,0,0.1) 100%);
+            mix-blend-mode: overlay;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-value {
+            color: var(--neon-blue);
+            text-shadow: var(--glow-intensity) var(--neon-blue);
+        }
+        
+        .champion-display {
+            color: var(--neon-green);
+            text-shadow: var(--glow-intensity) var(--neon-green);
+        }
+
+        .bracket-container {
+            display: flex;
+            overflow-x: auto;
+            padding: 2rem 1rem;
+            background-color: var(--bg-dark); /* Deeper background for bracket */
+            border: 1px solid var(--neon-blue);
+            box-shadow: var(--glow-intensity) rgba(0,255,255,0.2);
+            position: relative;
+        }
+        .round {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            margin-right: 80px; /* More space for connectors */
+            position: relative;
+        }
+        .match {
+            background-color: #22222A;
+            border: 1px solid var(--neon-blue);
+            box-shadow: var(--glow-intensity) rgba(0,255,255,0.1);
+            width: 280px; /* Slightly wider */
+            position: relative;
+            margin-bottom: 20px; /* Space between matches */
+            z-index: 5;
+        }
+        .match::before { /* Top border glow */
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            opacity: 0.5;
+            animation: pulse-border 2s infinite alternate;
+        }
+
+        .match-player {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .match-player:last-child { border-bottom: none; }
+
+        .player-name {
+            color: var(--text-primary);
+            transition: color 0.3s ease;
+            font-family: 'Share Tech Mono', monospace; /* Monospaced font for names */
+        }
+        .player.winner .player-name {
+            color: var(--neon-green);
+            text-shadow: var(--glow-intensity) var(--neon-green);
+        }
+        .tbd { color: var(--text-secondary); font-style: italic; }
+
+        .player button {
+            background-color: rgba(0,255,255,0.2);
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--glow-intensity) rgba(0,255,255,0.3);
+            width: 36px; /* Set fixed width */
+            height: 28px; /* Set fixed height */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .player button:hover:not(:disabled) {
+            background-color: var(--neon-green);
+            color: var(--bg-dark);
+            border-color: var(--neon-green);
+            box-shadow: var(--glow-intensity) var(--neon-green);
+            transform: scale(1.05);
+        }
+        .player button:disabled {
+            background-color: rgba(50,50,50,0.5);
+            color: var(--text-secondary);
+            border-color: var(--bg-medium);
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Bracket Line Connectors - Advanced CSS for visual appeal */
+        .match-line {
+            position: absolute;
+            background-color: var(--neon-blue);
+            box-shadow: var(--glow-intensity) rgba(0,255,255,0.2);
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        .h-line { height: 2px; }
+        .v-line { width: 2px; }
+
+        @keyframes pulse-border {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="p-0 m-0">
+
+    <div class="flex flex-col h-screen">
+        <!-- Top Navbar -->
+        <nav class="top-nav flex-shrink-0">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <i class="fas fa-trophy text-2xl text-neon-orange mr-4"></i>
+                        <div>
+                             <h1 class="text-lg font-bold text-white leading-tight">بطولة مجمع الثقافة للألعاب الإلكترونية</h1>
+                             <p class="text-sm text-text-secondary leading-tight">مركز قيادة البطولة</p>
+                        </div>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#" id="nav-dashboard" class="nav-link active px-3 py-2 text-sm font-medium" onclick="switchView('dashboard')">لوحة القيادة</a>
+                            <a href="#" id="nav-fifa" class="nav-link px-3 py-2 text-sm font-medium" onclick="switchView('fifa')">FIFA</a>
+                            <a href="#" id="nav-rocket" class="nav-link px-3 py-2 text-sm font-medium" onclick="switchView('rocket')">Rocket League</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-6 md:p-10 relative">
+            <!-- Dashboard View -->
+            <div id="view-dashboard" class="relative z-10">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold mb-2 text-neon-blue">ملخص النظام</h2>
+                    <p class="text-lg text-text-secondary">مراقبة حية لتقدم البطولة.</p>
+                </header>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <div class="stat-card rounded-lg p-6"><div class="text-text-secondary">إجمالي المشاركين</div><div id="total-players-stat" class="stat-value text-4xl font-bold">0</div></div>
+                    <div class="stat-card rounded-lg p-6"><div class="text-text-secondary">لاعبو FIFA</div><div id="fifa-players-stat" class="stat-value text-4xl font-bold text-neon-green">0</div></div>
+                    <div class="stat-card rounded-lg p-6"><div class="text-text-secondary">لاعبو Rocket League</div><div id="rocket-players-stat" class="stat-value text-4xl font-bold text-neon-orange">0</div></div>
+                    <div class="stat-card rounded-lg p-6"><div class="text-text-secondary">المباريات المتبقية</div><div id="matches-left-stat" class="stat-value text-4xl font-bold">0</div></div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="stat-card rounded-lg p-8 text-center">
+                        <h3 class="text-2xl font-bold mb-4 text-neon-green">بطل FIFA</h3>
+                        <div id="fifa-champion-display" class="champion-display text-3xl font-bold tbd p-4">... لم يتحدد بعد ...</div>
+                    </div>
+                    <div class="stat-card rounded-lg p-8 text-center">
+                        <h3 class="text-2xl font-bold mb-4 text-neon-orange">بطل Rocket League</h3>
+                        <div id="rocket-champion-display" class="champion-display text-3xl font-bold tbd p-4">... لم يتحدد بعد ...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FIFA Bracket View -->
+            <div id="view-fifa" class="hidden relative z-10">
+                 <header class="mb-8"><h2 class="text-3xl font-bold mb-2 text-neon-green">جدول بطولة FIFA</h2></header>
+                <div id="fifa-bracket-container" class="bracket-container rounded-lg"></div>
+            </div>
+
+            <!-- Rocket League Bracket View -->
+            <div id="view-rocket" class="hidden relative z-10">
+                 <header class="mb-8"><h2 class="text-3xl font-bold mb-2 text-neon-orange">جدول بطولة Rocket League</h2></header>
+                <div id="rocket-bracket-container" class="bracket-container rounded-lg"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const rawData = [
+            { name: "عبد الملك اسماعيل عيسى صبيخي", id: "1154464224", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "راكان عبدالله علي عسيري", id: "1165909050", grade: "أول متوسط", game: "روكيت ليج" }, { name: "جابر محمد جابر عسيري", id: "1152842892", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "ريان إبراهيم علي عسيري", id: "7", grade: "أول متوسط", game: "كرة القدم (فيفا)" }, { name: "عزام محمد احمد النجعي", id: "1158897197", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "ماطر احمد ماطر عسيري", id: "1164702126", grade: "أول متوسط", game: "كرة القدم (فيفا)" }, { name: "أحمد سلطان محمد ال محنش", id: "1166413862", grade: "أول متوسط", game: "روكيت ليج" }, { name: "عبدالرحمن احمد صهيف عسيري", id: "1158913218", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "نايف علي سعيد الفاحم", id: "1159924388", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "حازم موسى محمد عسيري", id: "1177411590", grade: "رابع", game: "كرة القدم (فيفا)" }, { name: "حازم موسى محمد عسيري", id: "1177411590", grade: "رابع", game: "روكيت ليج" }, { name: "تميم علي احمد محمد فايع حسن", id: "1166187573", grade: "أول متوسط", game: "كرة القدم (فيفا)" }, { name: "سعيد أحمد سعيد الحيدي", id: "1165932227", grade: "أول متوسط", game: "روكيت ليج" }, { name: "سعود أحمد سعيد الحيدي", id: "1171149543", grade: "سادس", game: "روكيت ليج" }, { name: "اياد محمد عبدالله راتي", id: "1162138851", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "عبدالعزيز حاطر علي عسيري", id: "1159233251", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "ايمن حاضر علي عسيري", id: "1153410897", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "مهدي جمال فائع عسيري", id: "1154995177", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "يحيى محمد مفرح", id: "1151960224", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "راشد احمد مفرح", id: "rashid-ahmed", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "عبدالله محمد", id: "1158207769", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "مشافي مشني مشافي العرافي", id: "1157708452", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" },
+        ];
+        
+        const uniquePlayers = Array.from(new Set(rawData.map(p => JSON.stringify(p)))).map(s => JSON.parse(s));
+        
+        const state = {
+            fifa: { players: uniquePlayers.filter(p => p.game.includes('فيفا')), matches: [] },
+            rocket: { players: uniquePlayers.filter(p => p.game.includes('روكيت')), matches: [] }
+        };
+
+        function switchView(viewName) {
+            document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+            document.getElementById(`nav-${viewName}`).classList.add('active');
+        }
+
+        function createPlayerHTML(player, matchId, slot) {
+            const playerName = player ? player.name : '<i class="tbd">بانتظار المتأهل</i>';
+            const isBye = player && player.name === 'BYE';
+            const isDisabled = !player || isBye;
+            // FIX: Added 'player' class to the wrapper div so ".player button" styles apply correctly.
+            return `<div id="${matchId}-p${slot}" class="match-player player ${isBye ? 'bg-gray-800 opacity-50' : ''}">
+                        <span class="player-name">${playerName}</span>
+                        <button onclick="declareWinner('${matchId}', ${slot})" ${isDisabled ? 'disabled' : ''}><i class="fas fa-crown text-base"></i></button>
+                    </div>`;
+        }
+
+        function generateBracket(gameKey) {
+            const container = document.getElementById(`${gameKey}-bracket-container`);
+            const bracketData = state[gameKey];
+            container.innerHTML = '';
+            bracketData.matches = []; // Clear previous matches
+
+            let players = [...bracketData.players];
+            let targetSize = 2;
+            while(targetSize < players.length) targetSize *= 2;
+            while(players.length < targetSize) {
+                players.push({name: 'BYE', id: `bye-${players.length}-${gameKey}`, grade: 'BYE', game: gameKey});
+            }
+            
+            let currentRoundSources = players.map(p => ({ player: p })); 
+            let roundNum = 1;
+            
+            while(currentRoundSources.length > 1) {
+                const roundDiv = document.createElement('div');
+                roundDiv.className = 'round';
+                
+                const nextRoundSources = [];
+                for(let i=0; i < currentRoundSources.length / 2; i++) {
+                    const s1 = currentRoundSources[i*2];
+                    const s2 = currentRoundSources[i*2+1];
+                    const matchId = `${gameKey}-r${roundNum}-m${i}`;
+                    
+                    const matchDiv = document.createElement('div');
+                    matchDiv.className = 'match rounded-lg relative';
+                    matchDiv.id = matchId;
+                    matchDiv.innerHTML = createPlayerHTML(s1.player, matchId, 1) + createPlayerHTML(s2.player, matchId, 2);
+                    
+                    const matchData = { matchId, p1Source: s1, p2Source: s2, winner: null };
+                    bracketData.matches.push(matchData);
+                    nextRoundSources.push({ match: matchData }); // Next round's source is this match
+                    roundDiv.appendChild(matchDiv);
+                }
+                container.appendChild(roundDiv);
+                currentRoundSources = nextRoundSources;
+                roundNum++;
+            }
+            
+            // NEW: Defer line drawing until after the DOM has been painted.
+            setTimeout(() => drawBracketLines(gameKey), 0);
+            
+            bracketData.matches.forEach(match => {
+                if (match.p1Source.player && match.p1Source.player.name === 'BYE') {
+                    declareWinner(match.matchId, 2, true);
+                } else if (match.p2Source.player && match.p2Source.player.name === 'BYE') {
+                    declareWinner(match.matchId, 1, true);
+                }
+            });
+            updateStats();
+        }
+        
+       function declareWinner(matchId, winnerSlot, isAuto = false) {
+            const gameKey = matchId.startsWith('fifa') ? 'fifa' : 'rocket';
+            const bracketData = state[gameKey];
+
+            const currentMatch = bracketData.matches.find(m => m.matchId === matchId);
+            if (!currentMatch || currentMatch.winner) return;
+
+            const winnerSource = winnerSlot === 1 ? currentMatch.p1Source : currentMatch.p2Source;
+            
+            // **FIX**: The winner is either the player from the source object, or the winner of the source match.
+            currentMatch.winner = winnerSource.player || (winnerSource.match ? winnerSource.match.winner : null);
+            
+            if (!currentMatch.winner) {
+                console.error("Winner could not be determined for match:", matchId, winnerSource);
+                return;
+            }
+
+            const winnerPlayerDiv = document.getElementById(`${matchId}-p${winnerSlot}`);
+            if (winnerPlayerDiv) winnerPlayerDiv.classList.add('winner');
+            
+            const matchDiv = document.getElementById(matchId);
+            if (matchDiv) matchDiv.querySelectorAll('button').forEach(b => b.disabled = true);
+
+            const nextMatch = bracketData.matches.find(m => 
+                (m.p1Source.match && m.p1Source.match.matchId === matchId) || 
+                (m.p2Source.match && m.p2Source.match.matchId === matchId)
+            );
+            
+            if (nextMatch) {
+                const nextSlot = (nextMatch.p1Source.match && nextMatch.p1Source.match.matchId === matchId) ? 1 : 2;
+                
+                // Propagate the winner player object to the next match's source.
+                nextMatch[nextSlot === 1 ? 'p1Source' : 'p2Source'].player = currentMatch.winner;
+
+                const nextPlayerDiv = document.getElementById(`${nextMatch.matchId}-p${nextSlot}`);
+                if (nextPlayerDiv) {
+                    nextPlayerDiv.querySelector('.player-name').innerHTML = currentMatch.winner.name;
+                    nextPlayerDiv.querySelector('.player-name').classList.remove('tbd');
+                }
+                
+                // Enable buttons on the next match if its other opponent is also ready.
+                const otherSource = nextSlot === 1 ? nextMatch.p2Source : nextMatch.p1Source;
+                if (otherSource.player || (otherSource.match && otherSource.match.winner)) {
+                     document.getElementById(nextMatch.matchId).querySelectorAll('button').forEach(b => b.disabled = false);
+                }
+
+                const otherPlayer = otherSource.player || (otherSource.match ? otherSource.match.winner : null);
+                if (otherPlayer && otherPlayer.name === 'BYE') {
+                    declareWinner(nextMatch.matchId, nextSlot, true);
+                }
+
+            } else { 
+                document.getElementById(`${gameKey}-champion-display`).textContent = currentMatch.winner.name;
+                document.getElementById(`${gameKey}-champion-display`).classList.remove('tbd');
+            }
+             if (!isAuto) {
+                updateStats();
+            }
+        }
+        
+        // NEW: Function to draw the connector lines for the brackets.
+        function drawBracketLines(gameKey) {
+            const container = document.getElementById(`${gameKey}-bracket-container`);
+            if (!container) return;
+
+            container.querySelectorAll('.match-line').forEach(line => line.remove());
+
+            const rounds = Array.from(container.querySelectorAll('.round'));
+            if (rounds.length < 2) return;
+
+            for (let i = 0; i < rounds.length - 1; i++) {
+                const currentMatches = Array.from(rounds[i].querySelectorAll('.match'));
+                const nextMatches = Array.from(rounds[i+1].querySelectorAll('.match'));
+
+                for (let j = 0; j < currentMatches.length / 2; j++) {
+                    const topMatch = currentMatches[j * 2];
+                    const bottomMatch = currentMatches[j * 2 + 1];
+                    const nextMatch = nextMatches[j];
+
+                    if (!topMatch || !bottomMatch || !nextMatch) continue;
+                    
+                    const lineHalfWidth = 40; // Half of the margin-right on .round
+                    const midX = topMatch.offsetLeft + topMatch.offsetWidth;
+                    
+                    // Top Match Connector
+                    const startY = topMatch.offsetTop + topMatch.offsetHeight / 2;
+                    const hLine1 = document.createElement('div');
+                    hLine1.className = 'match-line h-line';
+                    hLine1.style.cssText = `top: ${startY - 1}px; left: ${midX}px; width: ${lineHalfWidth}px;`;
+                    container.appendChild(hLine1);
+
+                    // Bottom Match Connector
+                    const endY = bottomMatch.offsetTop + bottomMatch.offsetHeight / 2;
+                    const hLine2 = document.createElement('div');
+                    hLine2.className = 'match-line h-line';
+                    hLine2.style.cssText = `top: ${endY - 1}px; left: ${midX}px; width: ${lineHalfWidth}px;`;
+                    container.appendChild(hLine2);
+                    
+                    // Vertical Connector
+                    const vLine = document.createElement('div');
+                    vLine.className = 'match-line v-line';
+                    vLine.style.cssText = `top: ${startY}px; left: ${midX + lineHalfWidth - 1}px; height: ${endY - startY}px;`;
+                    container.appendChild(vLine);
+
+                    // Connector to next match
+                    const nextMatchY = nextMatch.offsetTop + nextMatch.offsetHeight / 2;
+                    const hLine3 = document.createElement('div');
+                    hLine3.className = 'match-line h-line';
+                    hLine3.style.cssText = `top: ${nextMatchY - 1}px; left: ${midX + lineHalfWidth}px; width: ${lineHalfWidth}px;`;
+                    container.appendChild(hLine3);
+                }
+            }
+        }
+        
+        function updateStats() {
+            const totalFifaPlayers = state.fifa.players.filter(p => p.name !== 'BYE').length;
+            const totalRocketPlayers = state.rocket.players.filter(p => p.name !== 'BYE').length;
+            
+            const totalFifaMatches = totalFifaPlayers > 1 ? totalFifaPlayers - 1 : 0;
+            const totalRocketMatches = totalRocketPlayers > 1 ? totalRocketPlayers - 1 : 0;
+            
+            const playedFifaMatches = state.fifa.matches.filter(m => m.winner).length;
+            const playedRocketMatches = state.rocket.matches.filter(m => m.winner).length;
+            
+            document.getElementById('total-players-stat').textContent = uniquePlayers.filter(p => p.name !== 'BYE').length;
+            document.getElementById('fifa-players-stat').textContent = totalFifaPlayers;
+            document.getElementById('rocket-players-stat').textContent = totalRocketPlayers;
+            document.getElementById('matches-left-stat').textContent = (totalFifaMatches + totalRocketMatches) - (playedFifaMatches + playedRocketMatches);
+        }
+
+        window.onload = () => {
+            generateBracket('fifa');
+            generateBracket('rocket');
+            switchView('dashboard'); 
+            updateStats();
+        };
+
+        // NEW: Redraw lines on window resize to maintain connections.
+        window.addEventListener('resize', () => {
+            drawBracketLines('fifa');
+            drawBracketLines('rocket');
+        });
+    </script>
+</body>
+</html>
+

@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
         :root {
@@ -16,22 +16,50 @@
             --bg-light: #2A2A35;
             --text-primary: #E0E0E0;
             --text-secondary: #A0A0A0;
-            --neon-blue: #00FFFF; /* Cyan */
-            --neon-green: #00FF00; /* Lime Green */
-            --neon-orange: #FF8C00; /* Dark Orange */
+            --neon-blue: #00FFFF;
+            --neon-green: #00FF00;
+            --neon-orange: #FF8C00;
+            --neon-purple: #B026FF;
             --glow-intensity: 0 0 8px;
         }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         html, body {
             overscroll-behavior-x: none;
+            scroll-behavior: smooth;
         }
+        
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: var(--bg-dark);
+            background: linear-gradient(135deg, #0A0A0E 0%, #1A1425 50%, #0A0A0E 100%);
             color: var(--text-primary);
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
         }
-        body::before { /* Cybernetic grid background */
+        
+        /* خلفية سيبرانية متحركة */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0,255,255,0.15) 0%, transparent 25%),
+                radial-gradient(circle at 80% 80%, rgba(255,140,0,0.12) 0%, transparent 25%),
+                radial-gradient(circle at 40% 20%, rgba(176,38,255,0.1) 0%, transparent 25%);
+            animation: backgroundDrift 20s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        body::after {
             content: '';
             position: fixed;
             top: 0;
@@ -39,261 +67,728 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at top left, rgba(0,255,255,0.08) 0%, transparent 20%),
-                radial-gradient(circle at bottom right, rgba(255,140,0,0.08) 0%, transparent 20%),
-                url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="%231a1a22" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>') center / 40px 40px;
-            opacity: 0.6;
-            z-index: -1;
+                url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="%23151520" stroke-width="0.5" opacity="0.3"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>') center / 50px 50px;
+            opacity: 0.4;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        @keyframes backgroundDrift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-50px, -50px) rotate(1deg); }
+        }
+
+        /* شريط التقدم العلوي */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            z-index: 100;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, 
+                var(--neon-blue) 0%, 
+                var(--neon-purple) 50%, 
+                var(--neon-orange) 100%);
+            box-shadow: 
+                0 0 20px var(--neon-blue),
+                0 0 40px var(--neon-purple),
+                0 0 60px var(--neon-orange);
+            animation: progressPulse 2s ease-in-out infinite;
+            transition: width 0.5s ease;
+        }
+        
+        @keyframes progressPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         h1, h2, h3, .stat-value, .player-name {
             font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
+        
+        /* شريط التنقل بتأثير Glassmorphism */
         .top-nav {
-            background-color: var(--bg-medium);
-            border-bottom: 2px solid var(--neon-blue);
-            box-shadow: var(--glow-intensity) rgba(0,255,255,0.3);
-            z-index: 20;
-            position: relative;
+            background: rgba(26, 26, 34, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 2px solid rgba(0,255,255,0.3);
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.3),
+                0 0 20px rgba(0,255,255,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            z-index: 50;
+            position: sticky;
+            top: 0;
         }
+        
         .nav-link {
             border-bottom: 3px solid transparent;
-            transition: all 0.3s ease-in-out;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             text-shadow: none;
-        }
-        .nav-link.active, .nav-link:hover {
-            border-bottom-color: var(--neon-blue);
-            color: var(--neon-blue);
-            text-shadow: var(--glow-intensity) var(--neon-blue);
-        }
-        .stat-card {
-            background-color: var(--bg-medium);
-            border: 1px solid var(--neon-blue);
-            box-shadow: var(--glow-intensity) rgba(0,255,255,0.2);
-            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
-        .stat-card::before { /* Glitch effect */
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            transform: translateX(-50%);
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            width: 100%;
+        }
+        
+        .nav-link.active, .nav-link:hover {
+            color: var(--neon-blue);
+            text-shadow: 
+                0 0 10px var(--neon-blue),
+                0 0 20px var(--neon-blue),
+                0 0 30px var(--neon-blue);
+        }
+        
+        /* بطاقات إحصائية بتأثير Glassmorphism المحسّن */
+        .glass-card {
+            background: rgba(42, 42, 53, 0.4);
+            backdrop-filter: blur(15px) saturate(150%);
+            -webkit-backdrop-filter: blur(15px) saturate(150%);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 20px rgba(0,255,255,0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
+            left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, rgba(0,255,255,0.1) 0%, transparent 50%, rgba(255,140,0,0.1) 100%);
-            mix-blend-mode: overlay;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0,255,255,0.1),
+                transparent
+            );
+            transition: left 0.5s ease;
         }
-        .stat-card:hover::before {
-            opacity: 1;
+        
+        .glass-card:hover::before {
+            left: 100%;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(0,255,255,0.4);
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.4),
+                0 0 40px rgba(0,255,255,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            opacity: 0.2;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.4s ease;
+        }
+        
+        .glass-card:hover .stat-icon {
+            opacity: 0.4;
+            transform: translateY(-50%) scale(1.2) rotate(10deg);
         }
 
         .stat-value {
-            color: var(--neon-blue);
-            text-shadow: var(--glow-intensity) var(--neon-blue);
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(0,255,255,0.5));
+            animation: statGlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes statGlow {
+            0%, 100% { 
+                filter: drop-shadow(0 0 10px rgba(0,255,255,0.5));
+            }
+            50% { 
+                filter: drop-shadow(0 0 30px rgba(0,255,255,0.8));
+            }
+        }
+        
+        /* بطاقة البطل مع تأثيرات خاصة */
+        .champion-card {
+            background: rgba(42, 42, 53, 0.5);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 24px;
+            border: 2px solid rgba(0,255,0,0.3);
+            box-shadow: 
+                0 12px 48px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.15),
+                0 0 60px rgba(0,255,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .champion-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent,
+                rgba(0,255,0,0.1),
+                transparent 30%
+            );
+            animation: championRotate 4s linear infinite;
+        }
+        
+        @keyframes championRotate {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .champion-card::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: rgba(10,10,14,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 22px;
+            z-index: 1;
+        }
+        
+        .champion-card > * {
+            position: relative;
+            z-index: 2;
         }
         
         .champion-display {
             color: var(--neon-green);
-            text-shadow: var(--glow-intensity) var(--neon-green);
+            text-shadow: 
+                0 0 10px var(--neon-green),
+                0 0 20px var(--neon-green),
+                0 0 40px var(--neon-green),
+                0 0 80px var(--neon-green);
+            animation: championPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes championPulse {
+            0%, 100% { 
+                transform: scale(1);
+                text-shadow: 
+                    0 0 10px var(--neon-green),
+                    0 0 20px var(--neon-green),
+                    0 0 40px var(--neon-green);
+            }
+            50% { 
+                transform: scale(1.05);
+                text-shadow: 
+                    0 0 20px var(--neon-green),
+                    0 0 40px var(--neon-green),
+                    0 0 60px var(--neon-green),
+                    0 0 100px var(--neon-green);
+            }
         }
 
+        /* حاوية البراكيت المحسنة */
         .bracket-container {
             display: flex;
             overflow-x: auto;
-            padding: 2rem 1rem;
-            background-color: var(--bg-dark); /* Deeper background for bracket */
-            border: 1px solid var(--neon-blue);
-            box-shadow: var(--glow-intensity) rgba(0,255,255,0.2);
+            overflow-y: hidden;
+            padding: 3rem 1.5rem;
+            background: rgba(10,10,14,0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,255,255,0.2);
+            border-radius: 16px;
+            box-shadow: 
+                inset 0 0 60px rgba(0,0,0,0.5),
+                0 8px 32px rgba(0,0,0,0.3);
             position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0,255,255,0.5) rgba(255,255,255,0.1);
         }
+        
+        .bracket-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .bracket-container::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+        
+        .bracket-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 4px;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        
         .round {
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            margin-right: 80px; /* More space for connectors */
+            margin-right: 100px;
             position: relative;
+            min-height: 400px;
         }
+        
+        .round-label {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,255,255,0.1);
+            color: var(--neon-blue);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-family: 'Orbitron', sans-serif;
+            border: 1px solid rgba(0,255,255,0.3);
+            white-space: nowrap;
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        /* بطاقات المباراة بتصميم مستقبلي */
         .match {
-            background-color: #22222A;
-            border: 1px solid var(--neon-blue);
-            box-shadow: var(--glow-intensity) rgba(0,255,255,0.1);
-            width: 280px; /* Slightly wider */
+            background: rgba(34, 34, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,255,255,0.3);
+            border-radius: 12px;
+            box-shadow: 
+                0 4px 16px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 20px rgba(0,255,255,0.1);
+            width: 300px;
             position: relative;
-            margin-bottom: 20px; /* Space between matches */
+            margin-bottom: 24px;
             z-index: 5;
-            flex-shrink: 0; /* Prevent matches from shrinking */
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            overflow: hidden;
         }
-        .match::before { /* Top border glow */
+        
+        .match::before {
             content: '';
             position: absolute;
-            top: -1px;
+            top: 0;
             left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
-            opacity: 0.5;
-            animation: pulse-border 2s infinite alternate;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), var(--neon-purple), transparent);
+            animation: matchBorderFlow 3s linear infinite;
+        }
+        
+        @keyframes matchBorderFlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .match:hover {
+            transform: scale(1.03);
+            border-color: rgba(0,255,255,0.6);
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.4),
+                0 0 40px rgba(0,255,255,0.3);
         }
 
         .match-player {
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 1rem 1.25rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: relative;
+            transition: all 0.3s ease;
         }
-        .match-player:last-child { border-bottom: none; }
+        
+        .match-player:last-child { 
+            border-bottom: none; 
+        }
+        
+        .match-player:hover {
+            background: rgba(0,255,255,0.05);
+        }
 
         .player-name {
             color: var(--text-primary);
-            transition: color 0.3s ease;
-            font-family: 'Share Tech Mono', monospace; /* Monospaced font for names */
-        }
-        .player.winner .player-name {
-            color: var(--neon-green);
-            text-shadow: var(--glow-intensity) var(--neon-green);
-        }
-        .tbd { color: var(--text-secondary); font-style: italic; }
-
-        .player button {
-            background-color: rgba(0,255,255,0.2);
-            color: var(--neon-blue);
-            border: 1px solid var(--neon-blue);
-            border-radius: 4px;
-            padding: 4px 10px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
             transition: all 0.3s ease;
-            box-shadow: var(--glow-intensity) rgba(0,255,255,0.3);
-            width: 36px; /* Set fixed width */
-            height: 28px; /* Set fixed height */
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .match-player.winner {
+            background: linear-gradient(90deg, rgba(0,255,0,0.1), transparent);
+            border-right: 3px solid var(--neon-green);
+        }
+        
+        .match-player.winner .player-name {
+            color: var(--neon-green);
+            text-shadow: 
+                0 0 10px var(--neon-green),
+                0 0 20px var(--neon-green);
+            font-weight: bold;
+        }
+        
+        .tbd { 
+            color: var(--text-secondary); 
+            font-style: italic; 
+            font-size: 0.85rem;
+        }
+
+        /* أزرار متقدمة */
+        .match-player button {
+            background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(176,38,255,0.2));
+            color: var(--neon-blue);
+            border: 1px solid rgba(0,255,255,0.5);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 0 10px rgba(0,255,255,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            width: 42px;
+            height: 32px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
-        .player button:hover:not(:disabled) {
-            background-color: var(--neon-green);
+        
+        .match-player button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0,255,255,0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+        
+        .match-player button:hover:not(:disabled)::before {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .match-player button:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-blue));
             color: var(--bg-dark);
             border-color: var(--neon-green);
-            box-shadow: var(--glow-intensity) var(--neon-green);
-            transform: scale(1.05);
+            box-shadow: 
+                0 0 20px var(--neon-green),
+                0 0 40px var(--neon-green),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+            transform: scale(1.1);
         }
-        .player button:disabled {
-            background-color: rgba(50,50,50,0.5);
+        
+        .match-player button:disabled {
+            background: rgba(50,50,50,0.3);
             color: var(--text-secondary);
-            border-color: var(--bg-medium);
+            border-color: rgba(255,255,255,0.1);
             box-shadow: none;
             cursor: not-allowed;
-            opacity: 0.6;
+            opacity: 0.5;
+        }
+        
+        .match-player button i {
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+        
+        .match-player button:hover:not(:disabled) i {
+            transform: scale(1.2) rotate(15deg);
         }
 
-        /* Bracket Line Connectors - Advanced CSS for visual appeal */
+        /* خطوط الربط المحسّنة */
         .match-line {
             position: absolute;
-            background-color: var(--neon-blue);
-            box-shadow: var(--glow-intensity) rgba(0,255,255,0.2);
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            box-shadow: 
+                0 0 10px rgba(0,255,255,0.5),
+                0 0 20px rgba(176,38,255,0.3);
             z-index: 1;
             transition: all 0.3s ease;
         }
+        
+        .match-line.active {
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
+            box-shadow: 
+                0 0 15px rgba(0,255,0,0.7),
+                0 0 30px rgba(0,255,255,0.5);
+            animation: lineFlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes lineFlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
         .h-line { height: 2px; }
         .v-line { width: 2px; }
-
-        @keyframes pulse-border {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
+        
+        /* عناوين الأقسام */
+        .section-title {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(0,255,255,0.5));
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), var(--neon-purple), transparent);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        /* رسوم متحركة للدخول */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .animate-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .animate-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .animate-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .animate-in-delay-4 { animation-delay: 0.4s; opacity: 0; }
+        
+        /* تحسينات الاستجابة */
+        @media (max-width: 768px) {
+            .glass-card {
+                border-radius: 16px;
+            }
+            
+            .match {
+                width: 260px;
+            }
+            
+            .round {
+                margin-right: 60px;
+            }
+            
+            .stat-icon {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body class="p-0 m-0">
+    <!-- شريط التقدم -->
+    <div class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+    </div>
 
-    <div class="flex flex-col h-screen">
-        <!-- Top Navbar -->
+    <div class="flex flex-col min-h-screen">
+        <!-- شريط التنقل -->
         <nav class="top-nav flex-shrink-0">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
-                    <div class="flex items-center">
-                        <i class="fas fa-trophy text-2xl text-neon-orange mr-3 sm:mr-4"></i>
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <div class="relative">
+                            <i class="fas fa-trophy text-2xl sm:text-3xl text-neon-orange"></i>
+                            <div class="absolute inset-0 blur-xl bg-neon-orange opacity-50"></div>
+                        </div>
                         <div>
-                             <h1 class="text-base sm:text-lg font-bold text-white leading-tight">بطولة مجمع الثقافة للألعاب الإلكترونية</h1>
-                             <p class="text-xs sm:text-sm text-text-secondary leading-tight">مركز قيادة البطولة</p>
+                            <h1 class="text-base sm:text-lg font-bold text-white leading-tight">بطولة مجمع الثقافة للألعاب الإلكترونية</h1>
+                            <p class="text-xs sm:text-sm text-text-secondary leading-tight">مركز القيادة التكتيكي</p>
                         </div>
                     </div>
-                    <!-- Desktop Menu -->
+                    
+                    <!-- قائمة سطح المكتب -->
                     <div class="hidden md:block">
-                        <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="#" id="nav-dashboard" class="nav-link active px-3 py-2 text-sm font-medium" onclick="switchView('dashboard')">لوحة القيادة</a>
-                            <a href="#" id="nav-fifa" class="nav-link px-3 py-2 text-sm font-medium" onclick="switchView('fifa')">FIFA</a>
-                            <a href="#" id="nav-rocket" class="nav-link px-3 py-2 text-sm font-medium" onclick="switchView('rocket')">Rocket League</a>
+                        <div class="flex items-center gap-2">
+                            <a href="#" id="nav-dashboard" class="nav-link active px-4 py-2 text-sm font-medium" onclick="switchView('dashboard')">
+                                <i class="fas fa-chart-line ml-2"></i>لوحة القيادة
+                            </a>
+                            <a href="#" id="nav-fifa" class="nav-link px-4 py-2 text-sm font-medium" onclick="switchView('fifa')">
+                                <i class="fas fa-futbol ml-2"></i>FIFA
+                            </a>
+                            <a href="#" id="nav-rocket" class="nav-link px-4 py-2 text-sm font-medium" onclick="switchView('rocket')">
+                                <i class="fas fa-rocket ml-2"></i>Rocket League
+                            </a>
                         </div>
                     </div>
-                    <!-- Mobile menu button -->
+                    
+                    <!-- زر القائمة للموبايل -->
                     <div class="-mr-2 flex md:hidden">
-                        <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
-                            <span class="sr-only">Open main menu</span>
-                            <i id="menu-open-icon" class="fas fa-bars h-6 w-6 block"></i>
-                            <i id="menu-close-icon" class="fas fa-times h-6 w-6 hidden"></i>
+                        <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                            <i id="menu-open-icon" class="fas fa-bars text-xl"></i>
+                            <i id="menu-close-icon" class="fas fa-times text-xl hidden"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            <!-- Mobile menu, show/hide based on menu state. -->
+            
+            <!-- قائمة الموبايل -->
             <div class="md:hidden hidden" id="mobile-menu">
-                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <a href="#" id="nav-mobile-dashboard" class="nav-link active text-white block px-3 py-2 rounded-md text-base font-medium" onclick="switchView('dashboard')">لوحة القيادة</a>
-                    <a href="#" id="nav-mobile-fifa" class="nav-link text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium" onclick="switchView('fifa')">FIFA</a>
-                    <a href="#" id="nav-mobile-rocket" class="nav-link text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium" onclick="switchView('rocket')">Rocket League</a>
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-bg-medium bg-opacity-95 backdrop-blur-lg">
+                    <a href="#" id="nav-mobile-dashboard" class="nav-link active text-white block px-3 py-2 rounded-md text-base font-medium" onclick="switchView('dashboard')">
+                        <i class="fas fa-chart-line ml-2"></i>لوحة القيادة
+                    </a>
+                    <a href="#" id="nav-mobile-fifa" class="nav-link text-gray-300 block px-3 py-2 rounded-md text-base font-medium" onclick="switchView('fifa')">
+                        <i class="fas fa-futbol ml-2"></i>FIFA
+                    </a>
+                    <a href="#" id="nav-mobile-rocket" class="nav-link text-gray-300 block px-3 py-2 rounded-md text-base font-medium" onclick="switchView('rocket')">
+                        <i class="fas fa-rocket ml-2"></i>Rocket League
+                    </a>
                 </div>
             </div>
         </nav>
 
-        <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto p-4 md:p-10 relative">
-            <!-- Dashboard View -->
-            <div id="view-dashboard" class="relative z-10">
-                <header class="mb-8">
-                    <h2 class="text-3xl font-bold mb-2 text-neon-blue">ملخص النظام</h2>
-                    <p class="text-lg text-text-secondary">مراقبة حية لتقدم البطولة.</p>
+        <!-- المحتوى الرئيسي -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-10 relative z-10">
+            <!-- لوحة القيادة -->
+            <div id="view-dashboard">
+                <header class="mb-10 animate-in">
+                    <h2 class="section-title text-3xl md:text-4xl font-bold mb-3">ملخص النظام</h2>
+                    <p class="text-lg text-text-secondary mt-4">مراقبة حية ومباشرة لتقدم البطولة</p>
                 </header>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                    <div class="stat-card rounded-lg p-6"><div class="text-text-secondary">إجمالي المشاركين</div><div id="total-players-stat" class="stat-value text-4xl font-bold">0</div></div>
-                    <div class="stat-card rounded-lg p-6"><div class="text-text-secondary">لاعبو FIFA</div><div id="fifa-players-stat" class="stat-value text-4xl font-bold text-neon-green">0</div></div>
-                    <div class="stat-card rounded-lg p-6"><div class="text-text-secondary">لاعبو Rocket League</div><div id="rocket-players-stat" class="stat-value text-4xl font-bold text-neon-orange">0</div></div>
-                    <div class="stat-card rounded-lg p-6"><div class="text-text-secondary">المباريات المتبقية</div><div id="matches-left-stat" class="stat-value text-4xl font-bold">0</div></div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <div class="glass-card p-6 animate-in animate-in-delay-1">
+                        <i class="fas fa-users stat-icon"></i>
+                        <div class="text-text-secondary text-sm mb-2 font-medium">إجمالي المشاركين</div>
+                        <div id="total-players-stat" class="stat-value text-4xl md:text-5xl font-bold">0</div>
+                    </div>
+                    
+                    <div class="glass-card p-6 animate-in animate-in-delay-2">
+                        <i class="fas fa-futbol stat-icon" style="color: var(--neon-green);"></i>
+                        <div class="text-text-secondary text-sm mb-2 font-medium">لاعبو FIFA</div>
+                        <div id="fifa-players-stat" class="stat-value text-4xl md:text-5xl font-bold" style="background: linear-gradient(135deg, var(--neon-green), var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">0</div>
+                    </div>
+                    
+                    <div class="glass-card p-6 animate-in animate-in-delay-3">
+                        <i class="fas fa-rocket stat-icon" style="color: var(--neon-orange);"></i>
+                        <div class="text-text-secondary text-sm mb-2 font-medium">لاعبو Rocket League</div>
+                        <div id="rocket-players-stat" class="stat-value text-4xl md:text-5xl font-bold" style="background: linear-gradient(135deg, var(--neon-orange), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">0</div>
+                    </div>
+                    
+                    <div class="glass-card p-6 animate-in animate-in-delay-4">
+                        <i class="fas fa-gamepad stat-icon"></i>
+                        <div class="text-text-secondary text-sm mb-2 font-medium">المباريات المتبقية</div>
+                        <div id="matches-left-stat" class="stat-value text-4xl md:text-5xl font-bold">0</div>
+                    </div>
                 </div>
+                
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="stat-card rounded-lg p-8 text-center">
-                        <h3 class="text-2xl font-bold mb-4 text-neon-green">بطل FIFA</h3>
-                        <div id="fifa-champion-display" class="champion-display text-3xl font-bold tbd p-4">... لم يتحدد بعد ...</div>
+                    <div class="champion-card p-8 text-center animate-in">
+                        <div class="mb-4">
+                            <i class="fas fa-crown text-4xl mb-3" style="color: var(--neon-green); filter: drop-shadow(0 0 20px var(--neon-green));"></i>
+                            <h3 class="text-2xl font-bold" style="color: var(--neon-green); text-shadow: 0 0 20px var(--neon-green);">بطل FIFA</h3>
+                        </div>
+                        <div id="fifa-champion-display" class="champion-display text-2xl md:text-3xl font-bold tbd p-6">... لم يتحدد بعد ...</div>
                     </div>
-                    <div class="stat-card rounded-lg p-8 text-center">
-                        <h3 class="text-2xl font-bold mb-4 text-neon-orange">بطل Rocket League</h3>
-                        <div id="rocket-champion-display" class="champion-display text-3xl font-bold tbd p-4">... لم يتحدد بعد ...</div>
+                    
+                    <div class="champion-card p-8 text-center animate-in" style="border-color: rgba(255,140,0,0.3); box-shadow: 0 12px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15), 0 0 60px rgba(255,140,0,0.2);">
+                        <div class="mb-4">
+                            <i class="fas fa-trophy text-4xl mb-3" style="color: var(--neon-orange); filter: drop-shadow(0 0 20px var(--neon-orange));"></i>
+                            <h3 class="text-2xl font-bold" style="color: var(--neon-orange); text-shadow: 0 0 20px var(--neon-orange);">بطل Rocket League</h3>
+                        </div>
+                        <div id="rocket-champion-display" class="champion-display text-2xl md:text-3xl font-bold tbd p-6" style="color: var(--neon-orange); text-shadow: 0 0 10px var(--neon-orange), 0 0 20px var(--neon-orange), 0 0 40px var(--neon-orange);">... لم يتحدد بعد ...</div>
                     </div>
                 </div>
             </div>
 
-            <!-- FIFA Bracket View -->
-            <div id="view-fifa" class="hidden relative z-10">
-                 <header class="mb-8"><h2 class="text-3xl font-bold mb-2 text-neon-green">جدول بطولة FIFA</h2></header>
-                <div id="fifa-bracket-container" class="bracket-container rounded-lg"></div>
+            <!-- جدول FIFA -->
+            <div id="view-fifa" class="hidden">
+                <header class="mb-8 animate-in">
+                    <h2 class="section-title text-3xl md:text-4xl font-bold mb-3" style="background: linear-gradient(135deg, var(--neon-green), var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">جدول بطولة FIFA</h2>
+                    <p class="text-lg text-text-secondary mt-4">تابع مسار المنافسة</p>
+                </header>
+                <div id="fifa-bracket-container" class="bracket-container animate-in"></div>
             </div>
 
-            <!-- Rocket League Bracket View -->
-            <div id="view-rocket" class="hidden relative z-10">
-                 <header class="mb-8"><h2 class="text-3xl font-bold mb-2 text-neon-orange">جدول بطولة Rocket League</h2></header>
-                <div id="rocket-bracket-container" class="bracket-container rounded-lg"></div>
+            <!-- جدول Rocket League -->
+            <div id="view-rocket" class="hidden">
+                <header class="mb-8 animate-in">
+                    <h2 class="section-title text-3xl md:text-4xl font-bold mb-3" style="background: linear-gradient(135deg, var(--neon-orange), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">جدول بطولة Rocket League</h2>
+                    <p class="text-lg text-text-secondary mt-4">تابع مسار المنافسة</p>
+                </header>
+                <div id="rocket-bracket-container" class="bracket-container animate-in"></div>
             </div>
         </main>
     </div>
 
     <script>
         const rawData = [
-            { name: "عبد الملك اسماعيل عيسى صبيخي", id: "1154464224", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "راكان عبدالله علي عسيري", id: "1165909050", grade: "أول متوسط", game: "روكيت ليج" }, { name: "جابر محمد جابر عسيري", id: "1152842892", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "ريان إبراهيم علي عسيري", id: "7", grade: "أول متوسط", game: "كرة القدم (فيفa)" }, { name: "عزام محمد احمد النجعي", id: "1158897197", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "ماطر احمد ماطر عسيري", id: "1164702126", grade: "أول متوسط", game: "كرة القدم (فيفا)" }, { name: "أحمد سلطان محمد ال محنش", id: "1166413862", grade: "أول متوسط", game: "روكيت ليج" }, { name: "عبدالرحمن احمد صهيف عسيري", id: "1158913218", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "نايف علي سعيد الفاحم", id: "1159924388", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "حازم موسى محمد عسيري", id: "1177411590", grade: "رابع", game: "كرة القدم (فيفا)" }, { name: "حازم موسى محمد عسيري", id: "1177411590", grade: "رابع", game: "روكيت ليج" }, { name: "تميم علي احمد محمد فايع حسن", id: "1166187573", grade: "أول متوسط", game: "كرة القدم (فيفا)" }, { name: "سعيد أحمد سعيد الحيدي", id: "1165932227", grade: "أول متوسط", game: "روكيت ليج" }, { name: "سعود أحمد سعيد الحيدي", id: "1171149543", grade: "سادس", game: "روكيت ليج" }, { name: "اياد محمد عبدالله راتي", id: "1162138851", grade: "ثاني متوسط", game: "روكيت ليج" }, { name: "عبدالعزيز حاطر علي عسيري", id: "1159233251", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "ايمن حاضر علي عسيري", id: "1153410897", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "مهدي جمال فائع عسيري", id: "1154995177", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "يحيى محمد مفرح", id: "1151960224", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "راشد احمد مفرح", id: "rashid-ahmed", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" }, { name: "عبدالله محمد", id: "1158207769", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" }, { name: "مشافي مشني مشافي العرافي", id: "1157708452", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" },
+            { name: "عبد الملك اسماعيل عيسى صبيخي", id: "1154464224", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" },
+            { name: "راكان عبدالله علي عسيري", id: "1165909050", grade: "أول متوسط", game: "روكيت ليج" },
+            { name: "جابر محمد جابر عسيري", id: "1152842892", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" },
+            { name: "ريان إبراهيم علي عسيري", id: "7", grade: "أول متوسط", game: "كرة القدم (فيفa)" },
+            { name: "عزام محمد احمد النجعي", id: "1158897197", grade: "ثاني متوسط", game: "روكيت ليج" },
+            { name: "ماطر احمد ماطر عسيري", id: "1164702126", grade: "أول متوسط", game: "كرة القدم (فيفا)" },
+            { name: "أحمد سلطان محمد ال محنش", id: "1166413862", grade: "أول متوسط", game: "روكيت ليج" },
+            { name: "عبدالرحمن احمد صهيف عسيري", id: "1158913218", grade: "ثاني متوسط", game: "روكيت ليج" },
+            { name: "نايف علي سعيد الفاحم", id: "1159924388", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" },
+            { name: "حازم موسى محمد عسيري", id: "1177411590", grade: "رابع", game: "كرة القدم (فيفا)" },
+            { name: "حازم موسى محمد عسيري", id: "1177411590", grade: "رابع", game: "روكيت ليج" },
+            { name: "تميم علي احمد محمد فايع حسن", id: "1166187573", grade: "أول متوسط", game: "كرة القدم (فيفا)" },
+            { name: "سعيد أحمد سعيد الحيدي", id: "1165932227", grade: "أول متوسط", game: "روكيت ليج" },
+            { name: "سعود أحمد سعيد الحيدي", id: "1171149543", grade: "سادس", game: "روكيت ليج" },
+            { name: "اياد محمد عبدالله راتي", id: "1162138851", grade: "ثاني متوسط", game: "روكيت ليج" },
+            { name: "عبدالعزيز حاطر علي عسيري", id: "1159233251", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" },
+            { name: "ايمن حاضر علي عسيري", id: "1153410897", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" },
+            { name: "مهدي جمال فائع عسيري", id: "1154995177", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" },
+            { name: "يحيى محمد مفرح", id: "1151960224", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" },
+            { name: "راشد احمد مفرح", id: "rashid-ahmed", grade: "ثاني متوسط", game: "كرة القدم (فيفا)" },
+            { name: "عبدالله محمد", id: "1158207769", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" },
+            { name: "مشافي مشني مشافي العرافي", id: "1157708452", grade: "ثالث متوسط", game: "كرة القدم (فيفا)" },
         ];
         
         const uniquePlayers = Array.from(new Set(rawData.map(p => JSON.stringify(p)))).map(s => JSON.parse(s));
@@ -303,6 +798,7 @@
             rocket: { players: uniquePlayers.filter(p => p.game.includes('روكيت')), matches: [] }
         };
 
+        // إدارة القائمة المحمولة
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const openIcon = document.getElementById('menu-open-icon');
@@ -314,21 +810,22 @@
             closeIcon.classList.toggle('hidden');
         });
 
+        // التبديل بين الصفحات
         function switchView(viewName) {
             document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
             document.getElementById(`view-${viewName}`).classList.remove('hidden');
             
-            // Update desktop nav links
+            // تحديث روابط سطح المكتب
             document.querySelectorAll('.top-nav .nav-link').forEach(n => n.classList.remove('active'));
             const desktopLink = document.getElementById(`nav-${viewName}`);
             if(desktopLink) desktopLink.classList.add('active');
 
-            // Update mobile nav links
-             document.querySelectorAll('#mobile-menu .nav-link').forEach(n => n.classList.remove('active'));
+            // تحديث روابط الموبايل
+            document.querySelectorAll('#mobile-menu .nav-link').forEach(n => n.classList.remove('active'));
             const mobileLink = document.getElementById(`nav-mobile-${viewName}`);
             if(mobileLink) mobileLink.classList.add('active');
 
-            // Close mobile menu on selection
+            // إغلاق قائمة الموبايل
             if (!mobileMenu.classList.contains('hidden')) {
                 mobileMenu.classList.add('hidden');
                 openIcon.classList.remove('hidden');
@@ -336,21 +833,25 @@
             }
         }
 
+        // إنشاء HTML للاعب
         function createPlayerHTML(player, matchId, slot) {
             const playerName = player ? player.name : '<i class="tbd">بانتظار المتأهل</i>';
             const isBye = player && player.name === 'BYE';
             const isDisabled = !player || isBye;
-            return `<div id="${matchId}-p${slot}" class="match-player player ${isBye ? 'bg-gray-800 opacity-50' : ''}">
-                        <span class="player-name text-sm">${playerName}</span>
-                        <button onclick="declareWinner('${matchId}', ${slot})" ${isDisabled ? 'disabled' : ''}><i class="fas fa-crown text-base"></i></button>
+            return `<div id="${matchId}-p${slot}" class="match-player ${isBye ? 'bg-gray-800 opacity-50' : ''}">
+                        <span class="player-name">${playerName}</span>
+                        <button onclick="declareWinner('${matchId}', ${slot})" ${isDisabled ? 'disabled' : ''}>
+                            <i class="fas fa-crown"></i>
+                        </button>
                     </div>`;
         }
 
+        // توليد جدول البطولة
         function generateBracket(gameKey) {
             const container = document.getElementById(`${gameKey}-bracket-container`);
             const bracketData = state[gameKey];
             container.innerHTML = '';
-            bracketData.matches = []; // Clear previous matches
+            bracketData.matches = [];
 
             let players = [...bracketData.players];
             let targetSize = 2;
@@ -361,10 +862,25 @@
             
             let currentRoundSources = players.map(p => ({ player: p })); 
             let roundNum = 1;
+            const totalRounds = Math.log2(targetSize);
             
             while(currentRoundSources.length > 1) {
                 const roundDiv = document.createElement('div');
                 roundDiv.className = 'round';
+                
+                // إضافة تسمية الدور
+                const roundLabel = document.createElement('div');
+                roundLabel.className = 'round-label';
+                if (currentRoundSources.length === 2) {
+                    roundLabel.textContent = 'النهائي';
+                } else if (currentRoundSources.length === 4) {
+                    roundLabel.textContent = 'نصف النهائي';
+                } else if (currentRoundSources.length === 8) {
+                    roundLabel.textContent = 'ربع النهائي';
+                } else {
+                    roundLabel.textContent = `الدور ${roundNum}`;
+                }
+                roundDiv.appendChild(roundLabel);
                 
                 const nextRoundSources = [];
                 for(let i=0; i < currentRoundSources.length / 2; i++) {
@@ -373,13 +889,13 @@
                     const matchId = `${gameKey}-r${roundNum}-m${i}`;
                     
                     const matchDiv = document.createElement('div');
-                    matchDiv.className = 'match rounded-lg relative';
+                    matchDiv.className = 'match';
                     matchDiv.id = matchId;
                     matchDiv.innerHTML = createPlayerHTML(s1.player, matchId, 1) + createPlayerHTML(s2.player, matchId, 2);
                     
                     const matchData = { matchId, p1Source: s1, p2Source: s2, winner: null };
                     bracketData.matches.push(matchData);
-                    nextRoundSources.push({ match: matchData }); // Next round's source is this match
+                    nextRoundSources.push({ match: matchData });
                     roundDiv.appendChild(matchDiv);
                 }
                 container.appendChild(roundDiv);
@@ -387,8 +903,9 @@
                 roundNum++;
             }
             
-            setTimeout(() => drawBracketLines(gameKey), 0);
+            setTimeout(() => drawBracketLines(gameKey), 100);
             
+            // معالجة BYE تلقائياً
             bracketData.matches.forEach(match => {
                 if (match.p1Source.player && match.p1Source.player.name === 'BYE') {
                     declareWinner(match.matchId, 2, true);
@@ -399,7 +916,8 @@
             updateStats();
         }
         
-       function declareWinner(matchId, winnerSlot, isAuto = false) {
+        // إعلان الفائز
+        function declareWinner(matchId, winnerSlot, isAuto = false) {
             const gameKey = matchId.startsWith('fifa') ? 'fifa' : 'rocket';
             const bracketData = state[gameKey];
 
@@ -407,13 +925,9 @@
             if (!currentMatch || currentMatch.winner) return;
 
             const winnerSource = winnerSlot === 1 ? currentMatch.p1Source : currentMatch.p2Source;
-            
             currentMatch.winner = winnerSource.player || (winnerSource.match ? winnerSource.match.winner : null);
             
-            if (!currentMatch.winner) {
-                console.error("Winner could not be determined for match:", matchId, winnerSource);
-                return;
-            }
+            if (!currentMatch.winner) return;
 
             const winnerPlayerDiv = document.getElementById(`${matchId}-p${winnerSlot}`);
             if (winnerPlayerDiv) winnerPlayerDiv.classList.add('winner');
@@ -428,7 +942,6 @@
             
             if (nextMatch) {
                 const nextSlot = (nextMatch.p1Source.match && nextMatch.p1Source.match.matchId === matchId) ? 1 : 2;
-                
                 nextMatch[nextSlot === 1 ? 'p1Source' : 'p2Source'].player = currentMatch.winner;
 
                 const nextPlayerDiv = document.getElementById(`${nextMatch.matchId}-p${nextSlot}`);
@@ -439,23 +952,25 @@
                 
                 const otherSource = nextSlot === 1 ? nextMatch.p2Source : nextMatch.p1Source;
                 if (otherSource.player || (otherSource.match && otherSource.match.winner)) {
-                     document.getElementById(nextMatch.matchId).querySelectorAll('button').forEach(b => b.disabled = false);
+                    document.getElementById(nextMatch.matchId).querySelectorAll('button').forEach(b => b.disabled = false);
                 }
 
                 const otherPlayer = otherSource.player || (otherSource.match ? otherSource.match.winner : null);
                 if (otherPlayer && otherPlayer.name === 'BYE') {
                     declareWinner(nextMatch.matchId, nextSlot, true);
                 }
-
             } else { 
                 document.getElementById(`${gameKey}-champion-display`).textContent = currentMatch.winner.name;
                 document.getElementById(`${gameKey}-champion-display`).classList.remove('tbd');
             }
-             if (!isAuto) {
+            
+            if (!isAuto) {
                 updateStats();
+                updateProgressBar();
             }
         }
         
+        // رسم الخطوط الرابطة
         function drawBracketLines(gameKey) {
             const container = document.getElementById(`${gameKey}-bracket-container`);
             if (!container) return;
@@ -476,7 +991,7 @@
 
                     if (!topMatch || !bottomMatch || !nextMatch) continue;
                     
-                    const lineHalfWidth = 40; 
+                    const lineHalfWidth = 50;
                     const midX = topMatch.offsetLeft + topMatch.offsetWidth;
                     
                     const startY = topMatch.offsetTop + topMatch.offsetHeight / 2;
@@ -505,6 +1020,7 @@
             }
         }
         
+        // تحديث الإحصائيات
         function updateStats() {
             const totalFifaPlayers = state.fifa.players.filter(p => p.name !== 'BYE').length;
             const totalRocketPlayers = state.rocket.players.filter(p => p.name !== 'BYE').length;
@@ -512,22 +1028,42 @@
             const totalFifaMatches = totalFifaPlayers > 1 ? totalFifaPlayers - 1 : 0;
             const totalRocketMatches = totalRocketPlayers > 1 ? totalRocketPlayers - 1 : 0;
             
-            const playedFifaMatches = state.fifa.matches.filter(m => m.winner).length;
-            const playedRocketMatches = state.rocket.matches.filter(m => m.winner).length;
+            const playedFifaMatches = state.fifa.matches.filter(m => m.winner && m.p1Source.player?.name !== 'BYE' && m.p2Source.player?.name !== 'BYE').length;
+            const playedRocketMatches = state.rocket.matches.filter(m => m.winner && m.p1Source.player?.name !== 'BYE' && m.p2Source.player?.name !== 'BYE').length;
             
             document.getElementById('total-players-stat').textContent = uniquePlayers.filter(p => p.name !== 'BYE').length;
             document.getElementById('fifa-players-stat').textContent = totalFifaPlayers;
             document.getElementById('rocket-players-stat').textContent = totalRocketPlayers;
             document.getElementById('matches-left-stat').textContent = (totalFifaMatches + totalRocketMatches) - (playedFifaMatches + playedRocketMatches);
         }
+        
+        // تحديث شريط التقدم
+        function updateProgressBar() {
+            const totalFifaPlayers = state.fifa.players.filter(p => p.name !== 'BYE').length;
+            const totalRocketPlayers = state.rocket.players.filter(p => p.name !== 'BYE').length;
+            
+            const totalFifaMatches = totalFifaPlayers > 1 ? totalFifaPlayers - 1 : 0;
+            const totalRocketMatches = totalRocketPlayers > 1 ? totalRocketPlayers - 1 : 0;
+            const totalMatches = totalFifaMatches + totalRocketMatches;
+            
+            const playedFifaMatches = state.fifa.matches.filter(m => m.winner && m.p1Source.player?.name !== 'BYE' && m.p2Source.player?.name !== 'BYE').length;
+            const playedRocketMatches = state.rocket.matches.filter(m => m.winner && m.p1Source.player?.name !== 'BYE' && m.p2Source.player?.name !== 'BYE').length;
+            const playedMatches = playedFifaMatches + playedRocketMatches;
+            
+            const progressPercentage = totalMatches > 0 ? (playedMatches / totalMatches) * 100 : 0;
+            document.getElementById('progress-bar').style.width = progressPercentage + '%';
+        }
 
+        // تهيئة التطبيق
         window.onload = () => {
             generateBracket('fifa');
             generateBracket('rocket');
             switchView('dashboard'); 
             updateStats();
+            updateProgressBar();
         };
 
+        // إعادة رسم الخطوط عند تغيير حجم النافذة
         window.addEventListener('resize', () => {
             drawBracketLines('fifa');
             drawBracketLines('rocket');
@@ -535,4 +1071,3 @@
     </script>
 </body>
 </html>
-
